@@ -1,0 +1,12 @@
+#ifndef APPCONFIG_H
+#define APPCONFIG_H 
+
+#define APP_CONFIG_WIN_TITLE "Pluvia"
+#define APP_CONFIG_APP_ID "com.pluvia.app"
+#define APP_CONFIG_APP_FLAGS G_APPLICATION_DEFAULT_FLAGS
+#define APP_CONFIG_WIN_WIDTH 800
+#define APP_CONFIG_WIN_HEIGHT 600
+
+
+
+#endif

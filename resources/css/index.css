@@ -1,0 +1,111 @@
+
+
+headerbar {
+  
+  background: none;
+  border: none;
+
+}
+
+scrollbar {
+  background-color: transparent;
+  min-width: 4px;    
+  min-height: 4px;
+}
+
+scrollbar slider {
+  background-color: rgba(255, 255, 255, 0.0); 
+  border-radius: 2px;
+}
+
+* {
+  
+
+  font-family: "Exo 2", sans-serif;
+}
+
+window {
+
+  border-radius: 6px;
+}
+.main-box {
+  
+  padding-left: 75px;
+  padding-right: 75px;
+
+}
+
+.app-title {
+
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.city-label {
+
+
+  font-size: 24px;
+  font-weight: 500;
+
+}
+
+.current-temperature-label {
+
+
+  font-size: 46px;
+  font-weight: 500;
+
+}
+
+
+.section-label {
+  color: #525151;
+  font-weight: 500;
+
+}
+
+
+.section-box {
+
+
+  background-color: #e8eaf6;
+  border-radius: 6px;
+  padding: 17px;
+
+}
+
+.tw {
+
+  background-color: #eff1f9;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 7px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.tw-time-label {
+ 
+   color: #525151;
+ 
+}
+
+.tw-temp-label {
+ 
+  font-weight: bold;
+
+}
+
+
+
+.wc {
+
+  background-color: #eff1f9;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-radius: 7px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+
