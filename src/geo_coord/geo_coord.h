@@ -8,6 +8,7 @@
 typedef struct {
 
 
+  char name[256];
   f64 latitude;
   f64 longitude;
 

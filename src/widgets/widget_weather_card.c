@@ -26,3 +26,10 @@ GtkWidget *widget_weather_card(const char *label, const char* value, const char 
   return main_box;
 }
 
+GtkLabel *get_label_val_from_card(GtkWidget *weather_card){
+
+ return GTK_LABEL(gtk_widget_get_last_child(gtk_widget_get_first_child(weather_card)));
+
+
+}
+

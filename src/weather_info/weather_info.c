@@ -17,16 +17,20 @@ WeatherInfo get_city_weather(GeoCoordinates coord, NettResponse *res){
     return info;
   }
 
-  info.latitude = cJSON_GetObjectItem(json, "latitude")->valuedouble;
-  info.longitude = cJSON_GetObjectItem(json, "longitude")->valuedouble;
-  info.generationtime_ms = cJSON_GetObjectItem(json, "generationtime_ms")->valueint;
-  info.utc_offset_seconds = cJSON_GetObjectItem(json, "utc_offset_seconds")->valueint;
+  cJSON *city_res = cJSON_IsArray(json) ? cJSON_GetArrayItem(json, 0) : json;
 
-  info.elevation = cJSON_GetObjectItem(json, "elevation")->valuedouble;
-  cJSON *current = cJSON_GetObjectItem(json, "current");
+
+  info.latitude = cJSON_GetObjectItem(city_res, "latitude")->valuedouble;
+  info.longitude = cJSON_GetObjectItem(city_res, "longitude")->valuedouble;
+  info.generationtime_ms = cJSON_GetObjectItem(city_res, "generationtime_ms")->valueint;
+  info.utc_offset_seconds = cJSON_GetObjectItem(city_res, "utc_offset_seconds")->valueint;
+
+  info.elevation = cJSON_GetObjectItem(city_res, "elevation")->valuedouble;
+  cJSON *current = cJSON_GetObjectItem(city_res, "current");
   info.temperature = cJSON_GetObjectItem(current, "temperature_2m")->valuedouble;
   info.wind_speed = cJSON_GetObjectItem(current, "wind_speed_10m")->valuedouble;
-  strcpy(info.time, cJSON_GetObjectItem(current, "time")->valuestring);
+  snprintf(info.time, sizeof(info.time), "%s", cJSON_GetObjectItem(current, "time")->valuestring);
+  cJSON_Delete(json);
   return info;  
 
 }

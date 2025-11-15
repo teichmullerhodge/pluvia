@@ -2,6 +2,7 @@
 #include "appconfig/appconfig.h"
 #include "layout/layout.h"
 #include "logger/logger.h"
+#include "state/search_state.h"
 #include "temp_scale/temp_scale.h"
 #include <assert.h>
 #include "nett/nett.h"
@@ -9,6 +10,11 @@
 #include "weather_info/weather_info.h"
 #include "widgets/widget_time_weather.h"
 #include "widgets/widget_weather_card.h"
+
+
+
+
+
 
 static void on_activate(GtkApplication *app) {
   
@@ -114,7 +120,7 @@ static void on_activate(GtkApplication *app) {
   GtkWidget *chance_of_rain_card = widget_weather_card("Chance of rain", "21%", "weather-showers-scattered", true);
   GtkWidget *pressure_card = widget_weather_card("Pressure", "1023 mb", "view-restore-symbolic", true);
   GtkWidget *wind_card = widget_weather_card("Wind", "8 km/h", "weather-windy-symbolic", true);
-  GtkWidget *uv_idx_card = widget_weather_card("Severe alert?", "No", "weather-severe-alert-symbolic", true);
+  GtkWidget *severe_alert_card = widget_weather_card("Severe alert?", "No", "weather-severe-alert-symbolic", true);
   GtkWidget *feels_like_card = widget_weather_card("Feels like", "12°", "../assets/termometer.png", false);
   GtkWidget *visibility_card = widget_weather_card("Visibility", "14 km", "../assets/eye-visible.png", false);
 
@@ -124,7 +130,7 @@ static void on_activate(GtkApplication *app) {
   gtk_grid_attach(GTK_GRID(details_grid), pressure_card, 3, 0, 1, 1);
 
   gtk_grid_attach(GTK_GRID(details_grid), wind_card, 0, 1, 1, 1);
-  gtk_grid_attach(GTK_GRID(details_grid), uv_idx_card, 1, 1, 1, 1);
+  gtk_grid_attach(GTK_GRID(details_grid), severe_alert_card, 1, 1, 1, 1);
   gtk_grid_attach(GTK_GRID(details_grid), feels_like_card, 2, 1, 1, 1);
   gtk_grid_attach(GTK_GRID(details_grid), visibility_card, 3, 1, 1, 1);
 
@@ -143,13 +149,32 @@ static void on_activate(GtkApplication *app) {
 
   gtk_box_append(GTK_BOX(weather_details_box), weather_details_label);
   gtk_box_append(GTK_BOX(weather_details_box), details_grid);
-
-
-
   gtk_box_append(GTK_BOX(main_box), weather_details_box);
  
 
   expand_all(main_box);
+
+
+
+
+  WeatherUI *ui = g_new0(WeatherUI, 1);
+  ui->search_entry = GTK_ENTRY(city_entry);
+  ui->city_label = GTK_LABEL(city_label);
+  ui->current_temperature_label = GTK_LABEL(current_temperature_label);
+  ui->weather_image = GTK_IMAGE(weather_image);
+
+  ui->sunrise_label = get_label_val_from_card(sunrise_card);
+  ui->sunset_label = get_label_val_from_card(sunset_card);
+  ui->chance_of_rain_label = get_label_val_from_card(chance_of_rain_card);
+  ui->pressure_label = get_label_val_from_card(pressure_card);
+  ui->wind_label = get_label_val_from_card(wind_card);
+  ui->severe_alert_label = get_label_val_from_card(severe_alert_card);
+  ui->feels_like_label = get_label_val_from_card(feels_like_card);
+  ui->visibility_label = get_label_val_from_card(visibility_card);
+  ui->forecast_box = GTK_BOX(forecast_box);
+  g_signal_connect(city_entry, "changed", G_CALLBACK(on_city_changed), ui);
+
+
 
   gtk_window_set_child(GTK_WINDOW(window), main_box);   
   gtk_window_present(GTK_WINDOW(window));
