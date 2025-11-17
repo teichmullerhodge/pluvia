@@ -15,3 +15,16 @@ void expand_all(GtkWidget* widget) {
 
   
 }
+
+void on_toggle_theme_clicked(GtkButton *button, gpointer user_data){
+  (void)button;
+  (void)user_data;
+  toggle_dark_mode();
+}
+
+void toggle_dark_mode(void){
+    GtkSettings *settings = gtk_settings_get_default();
+    gboolean dark = FALSE;
+    g_object_get(settings, "gtk-application-prefer-dark-theme", &dark, NULL);
+    g_object_set(settings, "gtk-application-prefer-dark-theme", !dark, NULL);
+}

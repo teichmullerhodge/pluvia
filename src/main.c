@@ -1,16 +1,14 @@
 #include <gtk/gtk.h>
 #include "appconfig/appconfig.h"
 #include "layout/layout.h"
-#include "logger/logger.h"
 #include "state/search_state.h"
 #include "temp_scale/temp_scale.h"
 #include <assert.h>
-#include "nett/nett.h"
-#include "geo_coord/geo_coord.h"
 #include "weather_info/weather_info.h"
 #include "widgets/widget_time_weather.h"
+#include "widgets/widget_touchable.h"
 #include "widgets/widget_weather_card.h"
-
+#include <locale.h>
 
 
 
@@ -42,33 +40,45 @@ static void on_activate(GtkApplication *app) {
   GtkWidget *logo_image = gtk_image_new_from_file("../assets/pluvia-icon.png");
   GtkWidget *city_entry = gtk_entry_new();
   gtk_entry_set_placeholder_text(GTK_ENTRY(city_entry), "Search for cities");
-  
+  GtkWidget *toggle_theme_btn = touchable(NULL, "night-light-symbolic", NULL);
+
+
+
   gtk_box_append(GTK_BOX(header_box), logo_image);
   gtk_box_append(GTK_BOX(header_box), app_name_label);
   gtk_box_append(GTK_BOX(header_box), city_entry);
+  gtk_box_append(GTK_BOX(header_box), toggle_theme_btn);
   gtk_widget_set_hexpand(city_entry, true);
+
+
+  g_signal_connect(toggle_theme_btn, "clicked", G_CALLBACK(on_toggle_theme_clicked), NULL);
 
   gtk_box_append(GTK_BOX(main_box), header_box);
 
   GtkWidget *weather_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
+  gtk_widget_set_halign(weather_box, GTK_ALIGN_CENTER);
+  gtk_widget_add_css_class(weather_box, "weather-box");
   GtkWidget *weather_labels_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 
 
-  GtkWidget *city_label = gtk_label_new("Madrid");
+  GtkWidget *city_label = gtk_label_new("Search a city");
   gtk_widget_add_css_class(city_label, "city-label");
-  GtkWidget *current_temperature_label = gtk_label_new("16°");
+  GtkWidget *current_temperature_label = gtk_label_new("0°C");
   gtk_widget_add_css_class(current_temperature_label, "current-temperature-label");
 
 
   gtk_box_append(GTK_BOX(weather_labels_box), city_label);
   gtk_box_append(GTK_BOX(weather_labels_box), current_temperature_label);
 
-  GtkWidget *weather_image = gtk_image_new_from_file("../assets/sun-cloud.png");
+  GtkWidget *weather_image = gtk_image_new_from_file("../assets/wmo/icons/01d@2x.png");
   gtk_widget_add_css_class(weather_image, "current-temperature-image");
   gtk_widget_set_size_request(weather_image, 60, 60);
 
+  GtkWidget *weather_description = gtk_label_new("");
+
   gtk_box_append(GTK_BOX(weather_box), weather_labels_box);
   gtk_box_append(GTK_BOX(weather_box), weather_image);
+  gtk_box_append(GTK_BOX(weather_box), weather_description);
 
   
   gtk_box_append(GTK_BOX(main_box), weather_box);
@@ -115,14 +125,14 @@ static void on_activate(GtkApplication *app) {
 
   GtkWidget *details_grid = gtk_grid_new();
   
-  GtkWidget *sunrise_card = widget_weather_card("Sunrise", "8:18", "../assets/sunrise.png", false);
-  GtkWidget *sunset_card = widget_weather_card("Sunset", "18:40", "../assets/sunset.png", false);
-  GtkWidget *chance_of_rain_card = widget_weather_card("Chance of rain", "21%", "weather-showers-scattered", true);
-  GtkWidget *pressure_card = widget_weather_card("Pressure", "1023 mb", "view-restore-symbolic", true);
-  GtkWidget *wind_card = widget_weather_card("Wind", "8 km/h", "weather-windy-symbolic", true);
+  GtkWidget *sunrise_card = widget_weather_card("Sunrise", "Sunrise hour", "../assets/sunrise.png", false);
+  GtkWidget *sunset_card = widget_weather_card("Sunset", "Sunset hour", "../assets/sunset.png", false);
+  GtkWidget *chance_of_rain_card = widget_weather_card("Chance of rain", "%", "weather-showers-scattered", true);
+  GtkWidget *pressure_card = widget_weather_card("Pressure", "mb", "view-restore-symbolic", true);
+  GtkWidget *wind_card = widget_weather_card("Wind", "km/h", "weather-windy-symbolic", true);
   GtkWidget *severe_alert_card = widget_weather_card("Severe alert?", "No", "weather-severe-alert-symbolic", true);
-  GtkWidget *feels_like_card = widget_weather_card("Feels like", "12°", "../assets/termometer.png", false);
-  GtkWidget *visibility_card = widget_weather_card("Visibility", "14 km", "../assets/eye-visible.png", false);
+  GtkWidget *feels_like_card = widget_weather_card("Feels like", "°C", "../assets/termometer.png", false);
+  GtkWidget *visibility_card = widget_weather_card("Visibility", "km", "../assets/eye-visible.png", false);
 
   gtk_grid_attach(GTK_GRID(details_grid), sunrise_card, 0, 0, 1, 1);
   gtk_grid_attach(GTK_GRID(details_grid), sunset_card, 1, 0, 1, 1);
@@ -162,7 +172,7 @@ static void on_activate(GtkApplication *app) {
   ui->city_label = GTK_LABEL(city_label);
   ui->current_temperature_label = GTK_LABEL(current_temperature_label);
   ui->weather_image = GTK_IMAGE(weather_image);
-
+  ui->weather_description_label = GTK_LABEL(weather_description);
   ui->sunrise_label = get_label_val_from_card(sunrise_card);
   ui->sunset_label = get_label_val_from_card(sunset_card);
   ui->chance_of_rain_label = get_label_val_from_card(chance_of_rain_card);
@@ -172,13 +182,13 @@ static void on_activate(GtkApplication *app) {
   ui->feels_like_label = get_label_val_from_card(feels_like_card);
   ui->visibility_label = get_label_val_from_card(visibility_card);
   ui->forecast_box = GTK_BOX(forecast_box);
-  g_signal_connect(city_entry, "changed", G_CALLBACK(on_city_changed), ui);
+  g_signal_connect(city_entry, "activate", G_CALLBACK(on_city_changed), ui);
 
-
+  gtk_widget_set_hexpand(window, FALSE);
+  gtk_widget_set_vexpand(window, FALSE);
 
   gtk_window_set_child(GTK_WINDOW(window), main_box);   
   gtk_window_present(GTK_WINDOW(window));
-
   
 
 }
@@ -186,26 +196,12 @@ static void on_activate(GtkApplication *app) {
 int main(int argc, char **argv) {
 
 
+  setlocale(LC_NUMERIC, "C");
   f64 degree = 32.0f;
   assert(fahrenheit_to_celsius(degree) == 0);
   assert(celsius_to_fahrenheit(degree) >= 89.0f && celsius_to_fahrenheit(degree) <= 90.0f);
   assert(temp_scale_convert(FAHRENHEIT, degree) == fahrenheit_to_celsius(degree));
   assert(temp_scale_convert(CELSIUS, degree) == celsius_to_fahrenheit(degree));
-
-/*
-  NettResponse *res = response_init();
-  if(res == NULL) {
-    return -1;
-  }
-
-  GeoCoordinates geo = get_city_latitude_longitude("Londrina", res);
-  WeatherInfo info = get_city_weather(geo, res);
-
-  g_print("Latitude: %f - Longitude: %f | Weather: temperature: %f, wind-speed: %f, time: %s\n", 
-          geo.latitude, geo.longitude, info.temperature, info.wind_speed, info.time);
-
-*/
-
 
   GtkApplication *app =
       gtk_application_new(APP_CONFIG_APP_ID, APP_CONFIG_APP_FLAGS);

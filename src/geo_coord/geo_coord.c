@@ -3,14 +3,15 @@
 #include "../apimeteo/apimeteo.h"
 #include "../logger/logger.h"
 #include <stdio.h>
+#include <curl/curl.h>
 
 GeoCoordinates get_city_latitude_longitude(const char *city_name, NettResponse *res){
-
+  char *encoded = curl_easy_escape(NULL, city_name, 0);
   GeoCoordinates coord = { "", 0.0f, 0.0f };
   char location_url[1024];
-  build_city_query_uri(city_name, location_url, sizeof(location_url));
+  build_city_query_uri(encoded, location_url, sizeof(location_url));
   nett_get(location_url, NULL, res);
-  if(res->contents == NULL) return coord;
+  if(res->contents == NULL || !nett_ok(res->status_code)) return coord;
   cJSON *json = cJSON_Parse(res->contents);
   if(json == NULL) {
     LOGGER_ERROR("Error parsing json result.\n");

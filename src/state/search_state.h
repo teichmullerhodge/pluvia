@@ -4,7 +4,5 @@
 
 #include <gtk/gtk.h>
 gboolean debounce_search(gpointer data);
-void on_city_changed(GtkEditable *e, gpointer data); 
-
-
+void on_city_changed(GtkEntry *e, gpointer data);
 #endif 

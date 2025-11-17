@@ -2,7 +2,7 @@
 set -e
 
 COMPILER=gcc
-CXXFLAGS="-Wall -Wextra -Werror -g -O3 $(pkg-config --cflags gtk4)"
+CXXFLAGS="-Wall -Wextra -Werror -O3 $(pkg-config --cflags gtk4)"
 LDFLAGS="$(pkg-config --libs gtk4) -lm -lcurl -lcjson"
 
 SRC_DIR=src

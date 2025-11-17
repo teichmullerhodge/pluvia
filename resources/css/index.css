@@ -28,6 +28,24 @@ window {
 
   border-radius: 6px;
 }
+
+.shimmer {
+
+
+  color: #e8e8e8;
+  background: linear-gradient(90deg, #e6e6e6 0%, #e6e6e6 40%, #e8e8e8 70%);
+  background-size: 200% 100%;
+  background-clip: text;
+  color: transparent;
+  border-radius: 6px;
+  animation: shimmer 1.6s linear infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
 .main-box {
   
   padding-left: 75px;
@@ -96,8 +114,6 @@ window {
 
 }
 
-
-
 .wc {
 
   background-color: #eff1f9;
@@ -108,4 +124,9 @@ window {
   padding-bottom: 5px;
 }
 
+.current-temperature-image {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 
+}

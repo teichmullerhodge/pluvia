@@ -25,6 +25,9 @@ CURL *get_handler(){
   
 }
 
+bool nett_ok(HttpStatus status){
+  return status >= HTTP_STATUS_OK && status < HTTP_STATUS_MULTIPLE_CHOICES;
+}
 
 void reset_response(NettResponse *res) {
   

@@ -2,6 +2,7 @@
 #define NETT_H 
 
 #include <stdlib.h>
+#include <stdbool.h>
 
 typedef enum {
     // 1xx Informational
@@ -100,6 +101,7 @@ typedef struct {
 NettResponse *response_init();
 
 void destroy_response(NettResponse *res);
+bool nett_ok(HttpStatus status);
 
 
 void nett_get(const char *url, NettHeaders *headers, NettResponse *res);
