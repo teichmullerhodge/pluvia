@@ -1,9 +1,12 @@
+<p align="center">
+  <img src="assets/pluvia-icon.png" alt="Pluvia Icon" width="110">
+</p>
+
 # Pluvia
+
 A lightweight weather application built with GTK4.
 
-Pluvia is a fast and elegant desktop application to check real-time weather conditions anywhere in the world.
-Built using GTK4 and powered by the Open-Meteo API, it delivers accurate weather data through a simple, clean interface.
----
+
 
 ## Features 
 
@@ -20,6 +23,20 @@ Pluvia currently supports:
 - Sunrise time
 - Sunset time
 
+---
+
+## Screenshots
+
+<p align="center">
+  <img src="assets/pluvia-screen.png" alt="Pluvia screenshot" width="650">
+</p>
+
+<p align="center">
+  <img src="assets/pluvia-screen-snow.png" alt="Pluvia screenshot snow" width="650">
+</p>
+
+---
+
 ## Technical Notes
 
 - Built entirely with GTK4.
@@ -27,13 +44,13 @@ Pluvia currently supports:
 - All requests are performed asynchronously using GTask, ensuring the UI remains smooth and responsive.
 - Designed to run efficiently even on low-resource machines.
 
-
 ## Build
 
-- Ensure you have GTK4 installed on your machine
-- Run the cc.sh script 
-- Execute the binary at build/
+- Ensure you have GTK4 installed on your machine.
+- Run the `cc.sh` script.
+- Execute the binary inside the `build/` directory.
 
 ## Releases 
 
 - Soon.
+
