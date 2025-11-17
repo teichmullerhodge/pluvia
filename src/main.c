@@ -12,6 +12,10 @@
 
 
 
+static void on_shutdown(GtkApplication *app, WeatherUI *ui) {
+    (void)app;
+    g_free(ui);
+}
 
 
 static void on_activate(GtkApplication *app) {
@@ -183,6 +187,7 @@ static void on_activate(GtkApplication *app) {
   ui->feels_like_label = get_label_val_from_card(feels_like_card);
   ui->visibility_label = get_label_val_from_card(visibility_card);
   g_signal_connect(city_entry, "activate", G_CALLBACK(on_city_changed), ui);
+  g_signal_connect(app, "shutdown", G_CALLBACK(on_shutdown), ui);
 
   gtk_widget_set_hexpand(window, FALSE);
   gtk_widget_set_vexpand(window, FALSE);
