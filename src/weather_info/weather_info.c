@@ -66,19 +66,44 @@ WeatherInfo get_city_weather(GeoCoordinates coord, NettResponse *res){
   info.temperature = cJSON_GetObjectItem(current, "temperature_2m")->valuedouble;
   info.feels_like = cJSON_GetObjectItem(current, "apparent_temperature")->valuedouble;
 
-  cJSON *precipitation_probability = cJSON_GetObjectItem(city_res, "precipitation_probability");
-  cJSON *precipitation_arr = cJSON_IsArray(precipitation_probability) ? precipitation_probability : NULL;
-  if(precipitation_arr != NULL) {
+  info.pressure = cJSON_GetObjectItem(current, "pressure_msl")->valuedouble;
+  info.wind_speed = cJSON_GetObjectItem(current, "wind_speed_10m")->valuedouble;
+  info.visibility = cJSON_GetObjectItem(current, "visibility")->valueint;
 
-    cJSON *prob = cJSON_GetArrayItem(precipitation_arr, current_hour());
+
+  cJSON *hourly_obj = cJSON_GetObjectItem(city_res, "hourly");
+  if(hourly_obj != NULL) {
+    cJSON *temperature_forecast_arr = cJSON_GetObjectItem(hourly_obj, "temperature_2m");
+    cJSON *wmo_codes_forecast_arr = cJSON_GetObjectItem(hourly_obj, "weather_code");
+    size_t temp_forecast_arr_size = cJSON_GetArraySize(temperature_forecast_arr);
+    size_t wmo_codes_forecast_arr_size = cJSON_GetArraySize(wmo_codes_forecast_arr);
+
+    for(size_t k = 0; k < temp_forecast_arr_size; k++) {
+      if(k >= FORECAST_HOURS_DAY) break;
+      info.forecast_temperatures[k] = cJSON_GetArrayItem(temperature_forecast_arr, k)->valuedouble;
+    }
+    for(size_t k = 0; k < wmo_codes_forecast_arr_size; k++) {
+      if(k >= FORECAST_HOURS_DAY) break;
+      info.forecast_wcodes[k] = cJSON_GetArrayItem(wmo_codes_forecast_arr, k)->valuedouble;
+    }
+
+    cJSON *precipitation_probability = cJSON_GetObjectItem(hourly_obj, "precipitation_probability");
+    cJSON *precipitation_arr = cJSON_IsArray(precipitation_probability) ? precipitation_probability : NULL;
+    if(precipitation_arr != NULL) {
+
+
+    int curr = current_hour();
+    cJSON *prob = cJSON_GetArrayItem(precipitation_arr, curr);
     if(prob != NULL && cJSON_IsNumber(prob)){ 
       info.chance_of_rain = (u8)prob->valueint;
     }
   }
 
-  info.pressure = cJSON_GetObjectItem(current, "pressure_msl")->valuedouble;
-  info.wind_speed = cJSON_GetObjectItem(current, "wind_speed_10m")->valuedouble;
-  info.visibility = cJSON_GetObjectItem(current, "visibility")->valueint;
+
+
+
+  }
+
   cJSON_Delete(json);
   return info;  
 

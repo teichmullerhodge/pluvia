@@ -5,7 +5,7 @@
 #include "../definitions/definitions.h"
 
 #define METEO_CITY_METADATA_URI_FORMAT "https://geocoding-api.open-meteo.com/v1/search?name=%s"
-#define METEO_LOCATION_INFO_URI_FORMAT "https://api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&current=weather_code,is_day,temperature_2m,apparent_temperature,pressure_msl,wind_speed_10m,visibility&hourly=precipitation_probability&daily=sunrise,sunset&timezone=auto" 
+#define METEO_LOCATION_INFO_URI_FORMAT "https://api.open-meteo.com/v1/forecast?latitude=%s&longitude=%s&current=weather_code,is_day,temperature_2m,apparent_temperature,pressure_msl,wind_speed_10m,visibility&hourly=temperature_2m,weather_code,precipitation_probability&daily=sunrise,sunset&timezone=auto" 
 
 
 void build_city_query_uri(const char *city_name, char *out, size_t out_size);

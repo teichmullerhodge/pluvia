@@ -19,7 +19,8 @@ void expand_all(GtkWidget* widget) {
 void on_toggle_theme_clicked(GtkButton *button, gpointer user_data){
   (void)button;
   (void)user_data;
-  toggle_dark_mode();
+  return;
+  // toggle_dark_mode(); TODO in toggle_dark_mode match css colors.
 }
 
 void toggle_dark_mode(void){

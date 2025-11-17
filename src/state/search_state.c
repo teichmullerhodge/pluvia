@@ -22,6 +22,14 @@ void set_loading_ui(WeatherUI *ui, bool loading) {
     gtk_widget_add_css_class(GTK_WIDGET(ui->visibility_label), "shimmer");
     gtk_widget_add_css_class(GTK_WIDGET(ui->weather_description_label), "shimmer");
     gtk_widget_add_css_class(GTK_WIDGET(ui->severe_alert_label), "shimmer");
+    gtk_widget_add_css_class(GTK_WIDGET(ui->weather_image), "shimmer");
+    for(size_t k = 0; k < FORECAST_HOURS_DAY; k++){
+      gtk_widget_add_css_class(GTK_WIDGET(ui->forecast_box_hour_label[k]), "shimmer");
+      gtk_widget_add_css_class(GTK_WIDGET(ui->forecast_box_images[k]), "shimmer");
+      gtk_image_clear(ui->forecast_box_images[k]);
+    }
+    gtk_image_clear(ui->weather_image);
+
     return;
 
   }
@@ -37,6 +45,13 @@ void set_loading_ui(WeatherUI *ui, bool loading) {
     gtk_widget_remove_css_class(GTK_WIDGET(ui->visibility_label), "shimmer");
     gtk_widget_remove_css_class(GTK_WIDGET(ui->weather_description_label), "shimmer"); 
     gtk_widget_remove_css_class(GTK_WIDGET(ui->severe_alert_label), "shimmer");
+    gtk_widget_remove_css_class(GTK_WIDGET(ui->weather_image), "shimmer");
+    for(size_t k = 0; k < FORECAST_HOURS_DAY; k++){
+      gtk_widget_remove_css_class(GTK_WIDGET(ui->forecast_box_hour_label[k]), "shimmer");
+      gtk_widget_remove_css_class(GTK_WIDGET(ui->forecast_box_images[k]), "shimmer");
+    }
+ 
+
 }
 
 
@@ -78,7 +93,7 @@ void debounce_search_done(GObject *source, GAsyncResult *result, gpointer user_d
     }
 
     char temperature_c[50];
-    snprintf(temperature_c, sizeof(temperature_c), "%d°", (int)info->temperature);
+    snprintf(temperature_c, sizeof(temperature_c), "%d°C", (int)info->temperature);
 
     gtk_label_set_text(ui->current_temperature_label, temperature_c);
     
@@ -89,7 +104,7 @@ void debounce_search_done(GObject *source, GAsyncResult *result, gpointer user_d
     gtk_label_set_text(ui->chance_of_rain_label, chance_of_rain);
     
     char feels_like_c[50];
-    snprintf(feels_like_c, sizeof(feels_like_c), "%d°", (int)info->feels_like);
+    snprintf(feels_like_c, sizeof(feels_like_c), "%d°C", (int)info->feels_like);
     gtk_label_set_text(ui->feels_like_label, feels_like_c);
 
     char pressure_c[50];
@@ -107,6 +122,15 @@ void debounce_search_done(GObject *source, GAsyncResult *result, gpointer user_d
 
     update_widgets_from_wmo_code(info->wcode, info->is_day, ui->weather_image, ui->weather_description_label); 
 
+
+
+    for(size_t k = 0; k < FORECAST_HOURS_DAY; k++) {
+      char forecast_label_c[50];
+      snprintf(forecast_label_c, sizeof(forecast_label_c), "%d°C", (int)info->forecast_temperatures[k]);
+      gtk_label_set_text(ui->forecast_box_hour_label[k], forecast_label_c);
+      update_widgets_from_wmo_code(info->forecast_wcodes[k], k >= 6 && k <= 18, ui->forecast_box_images[k], NULL); 
+
+    }
 
     gtk_label_set_text(ui->sunrise_label, info->sunrise);
     gtk_label_set_text(ui->sunset_label, info->sunset);

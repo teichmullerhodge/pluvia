@@ -16,6 +16,8 @@
 
 static void on_activate(GtkApplication *app) {
   
+  WeatherUI *ui = g_new0(WeatherUI, 1);
+  
   GtkCssProvider *provider = gtk_css_provider_new();
   gtk_css_provider_load_from_path(provider, "../resources/css/index.css");
   gtk_style_context_add_provider_for_display(gdk_display_get_default(),
@@ -83,7 +85,6 @@ static void on_activate(GtkApplication *app) {
   
   gtk_box_append(GTK_BOX(main_box), weather_box);
 
-  i64 temperatures[] = {10, 11, 12, 12, 13, 14, 15, 16, 16, 16, 17, 17, 18, 19, 19, 20, 21, 20, 22, 20, 19, 18, 17, 15};
 
 
   GtkWidget *scrolled_forecast_win = gtk_scrolled_window_new();
@@ -96,10 +97,11 @@ static void on_activate(GtkApplication *app) {
   gtk_widget_set_halign(forecast_label, GTK_ALIGN_START);
   gtk_box_append(GTK_BOX(forecast_box), forecast_label);
 
-  size_t temperatures_size = sizeof(temperatures) / sizeof(temperatures[0]);
-  for(size_t k = 0; k < temperatures_size; k++){
-    GtkWidget *tm_weather = widget_time_weather(k, temperatures[k]);
+  for(size_t k = 0; k < FORECAST_HOURS_DAY; k++){
+    GtkWidget *tm_weather = widget_time_weather(k, 0);
     gtk_box_append(GTK_BOX(tm_weathers_box), tm_weather);
+    ui->forecast_box_hour_label[k] = GTK_LABEL(gtk_widget_get_last_child(tm_weather));
+    ui->forecast_box_images[k] = GTK_IMAGE(gtk_widget_get_next_sibling(gtk_widget_get_first_child(tm_weather))); 
   }
 
   gtk_box_append(GTK_BOX(forecast_box), tm_weathers_box);
@@ -167,7 +169,6 @@ static void on_activate(GtkApplication *app) {
 
 
 
-  WeatherUI *ui = g_new0(WeatherUI, 1);
   ui->search_entry = GTK_ENTRY(city_entry);
   ui->city_label = GTK_LABEL(city_label);
   ui->current_temperature_label = GTK_LABEL(current_temperature_label);
@@ -181,7 +182,6 @@ static void on_activate(GtkApplication *app) {
   ui->severe_alert_label = get_label_val_from_card(severe_alert_card);
   ui->feels_like_label = get_label_val_from_card(feels_like_card);
   ui->visibility_label = get_label_val_from_card(visibility_card);
-  ui->forecast_box = GTK_BOX(forecast_box);
   g_signal_connect(city_entry, "activate", G_CALLBACK(on_city_changed), ui);
 
   gtk_widget_set_hexpand(window, FALSE);

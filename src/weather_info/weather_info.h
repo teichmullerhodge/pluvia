@@ -64,6 +64,7 @@ typedef enum {
 
 } WMOWeatherCode;
 
+#define FORECAST_HOURS_DAY 24
 
 
 typedef struct {
@@ -80,9 +81,11 @@ typedef struct {
     GtkLabel *severe_alert_label;
     GtkLabel *feels_like_label;
     GtkLabel *visibility_label;
+    GtkLabel *forecast_box_hour_label[FORECAST_HOURS_DAY];
+    GtkImage *forecast_box_images[FORECAST_HOURS_DAY];
 
-    GtkBox   *forecast_box;
 } WeatherUI;
+
 
 
 typedef struct {
@@ -103,6 +106,9 @@ typedef struct {
   u64 visibility;
   bool is_day;
   WMOWeatherCode wcode;
+  f64 forecast_temperatures[FORECAST_HOURS_DAY];
+  WMOWeatherCode forecast_wcodes[FORECAST_HOURS_DAY];
+
    
 } WeatherInfo;
 

@@ -24,7 +24,9 @@ void update_widgets_from_wmo_code(WMOWeatherCode code, bool is_day, GtkImage *im
       cJSON *img = cJSON_GetObjectItem(inner, "image");
       cJSON *desc = cJSON_GetObjectItem(inner, "description");
       gtk_image_set_from_file(img_widget, img->valuestring);
-      gtk_label_set_text(description_widget, desc->valuestring);
+      if(description_widget != NULL){
+        gtk_label_set_text(description_widget, desc->valuestring);
+      }
       return;
     }
   }

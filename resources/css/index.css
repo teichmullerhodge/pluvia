@@ -7,17 +7,6 @@ headerbar {
 
 }
 
-scrollbar {
-  background-color: transparent;
-  min-width: 4px;    
-  min-height: 4px;
-}
-
-scrollbar slider {
-  background-color: rgba(255, 255, 255, 0.0); 
-  border-radius: 2px;
-}
-
 * {
   
 
@@ -26,7 +15,7 @@ scrollbar slider {
 
 window {
 
-  border-radius: 6px;
+  border-radius: 11px;
 }
 
 .shimmer {
