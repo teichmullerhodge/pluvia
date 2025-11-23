@@ -12,12 +12,12 @@
 #define LAYOUT_NO_INTERNET_MSG "No access to internet. Please connect and try again later."
 #define LAYOUT_GENERIC_ERROR_MSG "An error ocurred. Please try again later."
 
-#define LAYOUT_INFO_LOCATION_NOT_FOUND_IMAGE_PATH "../assets/info-error.png"
-#define LAYOUT_LOCATION_DONT_EXIST_IMAGE_PATH "../assets/location-not-found.png"
-#define LAYOUT_REQUEST_ERROR_IMAGE_PATH "../assets/generic-error.png"
-#define LAYOUT_REQUEST_TIMEOUT_IMAGE_PATH "../assets/request-timeout.png"
-#define LAYOUT_NO_INTERNET_IMAGE_PATH "../assets/no-internet.png"
-#define LAYOUT_GENERIC_ERROR_IMAGE_PATH "../assets/generic-error.png"
+#define LAYOUT_INFO_LOCATION_NOT_FOUND_IMAGE_PATH "/com/pluvia/assets/info-error.png"
+#define LAYOUT_LOCATION_DONT_EXIST_IMAGE_PATH "/com/pluvia/assets/location-not-found.png"
+#define LAYOUT_REQUEST_ERROR_IMAGE_PATH "/com/pluvia/assets/generic-error.png"
+#define LAYOUT_REQUEST_TIMEOUT_IMAGE_PATH "/com/pluvia/assets/request-timeout.png"
+#define LAYOUT_NO_INTERNET_IMAGE_PATH "/com/pluvia/assets/no-internet.png"
+#define LAYOUT_GENERIC_ERROR_IMAGE_PATH "/com/pluvia/assets/generic-error.png"
 
 
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="com/pluvia">
+    
+    <file>css/index.css</file>
+
+    <file>assets/eye-visible.png</file>
+    <file>assets/generic-error.png</file>
+    <file>assets/info-error.png</file>
+    <file>assets/location-not-found.png</file>
+    <file>assets/no-internet.png</file>
+    <file>assets/pluvia-icon.png</file>
+    <file>assets/pluvia-screen.png</file>
+    <file>assets/pluvia-screen-snow.png</file>
+    <file>assets/request-timeout.png</file>
+    <file>assets/sunrise.png</file>
+    <file>assets/sunset.png</file>
+    <file>assets/termometer.png</file>
+
+    <file>assets/wmo/wmo_record.json</file>
+
+    <file>assets/wmo/icons/01d@2x.png</file>
+    <file>assets/wmo/icons/01n@2x.png</file>
+    <file>assets/wmo/icons/02d@2x.png</file>
+    <file>assets/wmo/icons/02n@2x.png</file>
+    <file>assets/wmo/icons/03d@2x.png</file>
+    <file>assets/wmo/icons/03n@2x.png</file>
+    <file>assets/wmo/icons/09d@2x.png</file>
+    <file>assets/wmo/icons/09n@2x.png</file>
+    <file>assets/wmo/icons/10d@2x.png</file>
+    <file>assets/wmo/icons/10n@2x.png</file>
+    <file>assets/wmo/icons/11d@2x.png</file>
+    <file>assets/wmo/icons/11n@2x.png</file>
+    <file>assets/wmo/icons/13d@2x.png</file>
+    <file>assets/wmo/icons/13n@2x.png</file>
+    <file>assets/wmo/icons/50d@2x.png</file>
+    <file>assets/wmo/icons/50n@2x.png</file>
+
+  </gresource>
+</gresources>

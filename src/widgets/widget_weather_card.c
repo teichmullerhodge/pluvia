@@ -7,7 +7,7 @@ GtkWidget *widget_weather_card(const char *label, const char* value, const char 
 
   GtkWidget *label_widget = gtk_label_new(label);
   GtkWidget *label_val = gtk_label_new(value);
-  GtkWidget *icon_widget = use_icon ? gtk_image_new_from_icon_name(icon_or_path) : gtk_image_new_from_file(icon_or_path);
+  GtkWidget *icon_widget = use_icon ? gtk_image_new_from_icon_name(icon_or_path) : gtk_image_new_from_resource(icon_or_path);
 
   gtk_box_append(GTK_BOX(info_box), label_widget);
   gtk_box_append(GTK_BOX(info_box), label_val);
