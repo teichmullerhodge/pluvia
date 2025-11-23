@@ -4,8 +4,6 @@
     
     <file>css/index-light.css</file>
     <file>css/index-dark.css</file>
-
-
     <file>assets/eye-visible.png</file>
     <file>assets/generic-error.png</file>
     <file>assets/info-error.png</file>
@@ -15,12 +13,7 @@
     <file>assets/pluvia-screen.png</file>
     <file>assets/pluvia-screen-snow.png</file>
     <file>assets/request-timeout.png</file>
-    <file>assets/sunrise.png</file>
-    <file>assets/sunset.png</file>
-    <file>assets/termometer.png</file>
-
     <file>assets/wmo/wmo_record.json</file>
-
     <file>assets/wmo/icons/01d@2x.png</file>
     <file>assets/wmo/icons/01n@2x.png</file>
     <file>assets/wmo/icons/02d@2x.png</file>
