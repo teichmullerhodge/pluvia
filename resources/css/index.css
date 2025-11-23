@@ -119,3 +119,8 @@ window {
   background-position: center;
 
 }
+
+.error-code {
+  font-size: 12px;
+  font-weight: bold;
+}

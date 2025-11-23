@@ -54,12 +54,17 @@ static void on_activate(GtkApplication *app) {
   gtk_box_append(GTK_BOX(header_box), app_name_label);
   gtk_box_append(GTK_BOX(header_box), city_entry);
   gtk_box_append(GTK_BOX(header_box), toggle_theme_btn);
+  g_signal_connect(city_entry, "activate", G_CALLBACK(on_city_changed), ui);
   gtk_widget_set_hexpand(city_entry, true);
 
 
   g_signal_connect(toggle_theme_btn, "clicked", G_CALLBACK(on_toggle_theme_clicked), NULL);
 
   gtk_box_append(GTK_BOX(main_box), header_box);
+
+
+  GtkWidget *page_main = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+
 
   GtkWidget *weather_box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
   gtk_widget_set_halign(weather_box, GTK_ALIGN_CENTER);
@@ -87,7 +92,7 @@ static void on_activate(GtkApplication *app) {
   gtk_box_append(GTK_BOX(weather_box), weather_description);
 
   
-  gtk_box_append(GTK_BOX(main_box), weather_box);
+  gtk_box_append(GTK_BOX(page_main), weather_box);
 
 
 
@@ -117,7 +122,7 @@ static void on_activate(GtkApplication *app) {
     GTK_POLICY_NEVER      
 );
 
-  gtk_box_append(GTK_BOX(main_box), scrolled_forecast_win);
+  gtk_box_append(GTK_BOX(page_main), scrolled_forecast_win);
   gtk_widget_add_css_class(forecast_box, "section-box");
 
   GtkWidget *weather_details_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
@@ -165,14 +170,22 @@ static void on_activate(GtkApplication *app) {
 
   gtk_box_append(GTK_BOX(weather_details_box), weather_details_label);
   gtk_box_append(GTK_BOX(weather_details_box), details_grid);
-  gtk_box_append(GTK_BOX(main_box), weather_details_box);
+  gtk_box_append(GTK_BOX(page_main), weather_details_box);
  
 
-  expand_all(main_box);
+  expand_all(page_main);
 
+  GtkWidget *stack = gtk_stack_new();
+  gtk_stack_set_transition_type(GTK_STACK(stack), GTK_STACK_TRANSITION_TYPE_CROSSFADE);
+  gtk_stack_set_transition_duration(GTK_STACK(stack), 250);
+  ui->stack = GTK_STACK(stack);
 
+  gtk_stack_add_named(GTK_STACK(ui->stack), page_main, "page-main");
 
+  GtkWidget *page_error = layout_page_error(ui);
+  gtk_stack_add_named(GTK_STACK(ui->stack), page_error, "page-error");
 
+ 
   ui->search_entry = GTK_ENTRY(city_entry);
   ui->city_label = GTK_LABEL(city_label);
   ui->current_temperature_label = GTK_LABEL(current_temperature_label);
@@ -186,11 +199,14 @@ static void on_activate(GtkApplication *app) {
   ui->severe_alert_label = get_label_val_from_card(severe_alert_card);
   ui->feels_like_label = get_label_val_from_card(feels_like_card);
   ui->visibility_label = get_label_val_from_card(visibility_card);
-  g_signal_connect(city_entry, "activate", G_CALLBACK(on_city_changed), ui);
+  
+  
   g_signal_connect(app, "shutdown", G_CALLBACK(on_shutdown), ui);
 
   gtk_widget_set_hexpand(window, FALSE);
   gtk_widget_set_vexpand(window, FALSE);
+
+  gtk_box_append(GTK_BOX(main_box), stack);
 
   gtk_window_set_child(GTK_WINDOW(window), main_box);   
   gtk_window_present(GTK_WINDOW(window));

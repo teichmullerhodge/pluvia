@@ -25,13 +25,15 @@ GeoCoordinates get_city_latitude_longitude(const char *city_name, NettResponse *
   }
   cJSON *item = cJSON_GetArrayItem(results, 0);
   cJSON *name = cJSON_GetObjectItem(item, "name");
+  cJSON *state = cJSON_GetObjectItem(item, "admin1");
+  cJSON *country_code = cJSON_GetObjectItem(item, "country_code");
   cJSON *latitude =  cJSON_GetObjectItem(item, "latitude");
   cJSON *longitude =  cJSON_GetObjectItem(item, "longitude");
   
   if (cJSON_IsNumber(latitude) && cJSON_IsNumber(longitude)) {
     coord.latitude = latitude->valuedouble;
     coord.longitude = longitude->valuedouble;
-    snprintf(coord.name, sizeof(coord.name), "%s", name->valuestring);
+    snprintf(coord.name, sizeof(coord.name), "%s - %s | %s", name->valuestring, state->valuestring, country_code->valuestring);
     cJSON_Delete(json);
     return coord;
   }

@@ -3,8 +3,8 @@
 #include "../geo_coord/geo_coord.h"
 #include "../weather_info/weather_info.h"
 #include "../weather_info/weather_assets.h"
-
-
+#include "../layout/layout.h"
+#include "../nett/nett_utils.h"
 
 
 void set_loading_ui(WeatherUI *ui, bool loading) {
@@ -65,15 +65,38 @@ void debounce_search_task(GTask *task, gpointer source_object, gpointer task_dat
     NettResponse *res = response_init();
     GeoCoordinates geo = get_city_latitude_longitude(city, res);
 
+    if(!nett_ok(res->status_code)){
+      destroy_response(res);
+      g_task_return_pointer(task, NULL, NULL);
+      show_error_page(ui, LAYOUT_REQUEST_ERROR);
+      return;
+    }
+
     if (geo.latitude == 0.0f || geo.longitude == 0.0f) {
         destroy_response(res);
         g_task_return_pointer(task, NULL, NULL);
-        set_loading_ui(ui, false);
+        show_error_page(ui, LAYOUT_LOCATION_DONT_EXIST); 
         return;
     }
 
     WeatherInfo *info = g_new0(WeatherInfo, 1);
     *info = get_city_weather(geo, res);
+
+    if(!nett_ok(res->status_code)){
+      destroy_response(res);
+      g_task_return_pointer(task, NULL, NULL);
+      show_error_page(ui, LAYOUT_REQUEST_ERROR);
+      return;
+ 
+    }
+
+    if(info == NULL){
+      destroy_response(res);
+      g_task_return_pointer(task, NULL, NULL);
+      show_error_page(ui, LAYOUT_INFO_LOCATION_NOT_FOUND);
+      return;
+
+    } 
 
     destroy_response(res);
     g_task_return_pointer(task, info, g_free);
@@ -88,7 +111,6 @@ void debounce_search_done(GObject *source, GAsyncResult *result, gpointer user_d
     WeatherInfo *info = g_task_propagate_pointer(task, NULL);
 
     if (!info) {
-        set_loading_ui(ui, false);
         return;
     }
 
@@ -145,7 +167,7 @@ void debounce_search_done(GObject *source, GAsyncResult *result, gpointer user_d
 gboolean debounce_search(gpointer data){
     WeatherUI *ui = data;
     set_loading_ui(ui, true); 
-
+    show_main_page(ui);
    
     GTask *task = g_task_new(NULL, NULL, debounce_search_done, ui);
     g_task_set_task_data(task, ui, NULL);
@@ -161,7 +183,12 @@ gboolean debounce_search(gpointer data){
 
 void on_city_changed(GtkEntry *e, gpointer data) {
     (void)e;
-    debounce_search(data);
+    WeatherUI *ui = data;
+    if(!has_internet()){
+      show_error_page(ui, LAYOUT_NO_INTERNET);
+      return;
+    }
+    debounce_search(ui);
 }
 
 

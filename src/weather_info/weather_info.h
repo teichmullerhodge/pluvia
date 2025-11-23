@@ -68,6 +68,7 @@ typedef enum {
 
 
 typedef struct {
+    
     GtkEntry *search_entry;
     GtkLabel *city_label;
     GtkLabel *current_temperature_label;
@@ -84,13 +85,19 @@ typedef struct {
     GtkLabel *forecast_box_hour_label[FORECAST_HOURS_DAY];
     GtkImage *forecast_box_images[FORECAST_HOURS_DAY];
 
+    GtkStack *stack;
+
+    GtkLabel *error_label;
+    GtkImage *error_image; 
+    GtkLabel *error_code;
+
 } WeatherUI;
 
 
 
 typedef struct {
 
-  char city_name[256];
+  char city_name[512];
   char time[32];
   f64 latitude;
   f64 longitude;

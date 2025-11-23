@@ -19,9 +19,10 @@ Pluvia currently supports:
 - Visibility
 - Chance of rain (%)
 - Hour-by-hour forecast from 00:00 to 23:00
-- Quick visual representation for each hour (icons, temperature, conditions)
 - Sunrise time
 - Sunset time
+- Quick visual representation for each hour (icons, temperature, conditions)
+- Error handling showing errors (location not found, missing internet connection, request-error)
 
 ---
 
