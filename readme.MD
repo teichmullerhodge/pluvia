@@ -6,6 +6,10 @@
 
 A lightweight weather application built with GTK4.
 
+![Pluvia](https://img.shields.io/badge/pluvia-weather_app-blue)
+![C Language](https://img.shields.io/badge/Language-C-orange)
+![GTK4](https://img.shields.io/badge/desktop-GTK4-green)
+
 
 
 ## Features 
