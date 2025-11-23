@@ -1,0 +1,92 @@
+/* index-light.css - GTK4 compatible */
+
+headerbar {
+  background: none;
+  border: none;
+}
+
+* {
+  font-family: "Exo 2", sans-serif;
+}
+
+window {
+  background: #ffffff;
+  border-radius: 10px;
+}
+
+.shimmer {
+
+
+  color: #e8e8e8;
+  background: linear-gradient(90deg, #e6e6e6 0%, #e6e6e6 40%, #e8e8e8 70%);
+  background-size: 200% 100%;
+  color: transparent;
+  border-radius: 6px;
+  animation: shimmer 1.6s linear infinite;
+}
+
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.main-box {
+  padding-left: 75px;
+  padding-right: 75px;
+}
+
+.app-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1e1e1e;
+}
+
+.city-label {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.current-temperature-label {
+  font-size: 46px;
+  font-weight: 500;
+}
+
+.section-label {
+  font-weight: 500;
+  color: #525151;
+}
+
+.section-box {
+  background-color: #e8eaf6;
+  border-radius: 6px;
+  padding: 17px;
+}
+
+.tw,
+.wc {
+  background-color: #eff1f9;
+  padding: 5px 20px;
+  border-radius: 7px;
+}
+
+.tw-time-label {
+  color: #525151;
+}
+
+.tw-temp-label {
+  font-weight: bold;
+}
+
+.current-temperature-image {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.error-code {
+  font-size: 12px;
+  font-weight: bold;
+  color: #a83131;
+}
+

@@ -2,7 +2,9 @@
 <gresources>
   <gresource prefix="com/pluvia">
     
-    <file>css/index.css</file>
+    <file>css/index-light.css</file>
+    <file>css/index-dark.css</file>
+
 
     <file>assets/eye-visible.png</file>
     <file>assets/generic-error.png</file>

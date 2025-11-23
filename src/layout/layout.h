@@ -32,15 +32,26 @@ typedef enum {
 
 } LayoutErrors;  
 
+
+typedef enum {
+
+  LAYOUT_NONE,
+  LAYOUT_DARK_MODE,
+  LAYOUT_LIGHT_MODE
+
+} LayoutTheme;
+
+
 GtkWidget *layout_page_error(WeatherUI *ui);
-
 void expand_all(GtkWidget *widget);
-void toggle_dark_mode(void);
+void toggle_dark_mode(gpointer user_data);
 void on_toggle_theme_clicked(GtkButton *button, gpointer user_data);
-
 void show_error_page(WeatherUI *ui, LayoutErrors error);
 void show_main_page(WeatherUI *ui);
+void on_system_theme_changed(GObject *settings, GParamSpec *pspec, gpointer user_data);
 
+LayoutTheme get_system_theme();
+gboolean check_theme_change(gpointer user_data);
 
 
 

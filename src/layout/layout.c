@@ -1,9 +1,15 @@
 
 
 #include "layout.h"
+#include "../appconfig/appconfig.h"
+#include "../logger/logger.h"
 
-void expand_all(GtkWidget *widget)
-{
+static GSettings *settings = NULL;
+static LayoutTheme current_system_theme = LAYOUT_NONE;
+static LayoutTheme current_app_theme = LAYOUT_NONE;
+
+
+void expand_all(GtkWidget *widget) {
   if (widget == NULL)
     return;
   gtk_widget_set_hexpand(widget, TRUE);
@@ -13,26 +19,33 @@ void expand_all(GtkWidget *widget)
   return;
 }
 
-void on_toggle_theme_clicked(GtkButton *button, gpointer user_data)
-{
+void on_toggle_theme_clicked(GtkButton *button, gpointer user_data){
   (void)button;
   (void)user_data;
-  return;
-  // toggle_dark_mode(); TODO in toggle_dark_mode match css colors.
+  toggle_dark_mode(user_data); 
 }
 
-void toggle_dark_mode(void)
-{
-  GtkSettings *settings = gtk_settings_get_default();
-  gboolean dark = FALSE;
-  g_object_get(settings, "gtk-application-prefer-dark-theme", &dark, NULL);
-  g_object_set(settings, "gtk-application-prefer-dark-theme", !dark, NULL);
+void toggle_dark_mode(gpointer user_data) {
+    static bool dark = false;
+  
+    dark = current_app_theme == LAYOUT_DARK_MODE;
+    dark = !dark;
+    current_app_theme = dark ? LAYOUT_DARK_MODE : LAYOUT_LIGHT_MODE;
+    
+    GtkCssProvider *provider = (GtkCssProvider*)user_data;
+    const char *css_path = dark ? CSS_PATH_DARK : CSS_PATH_LIGHT;
+    LOAD_CSS(provider, css_path);
 }
 
-void error_from_layout_errors(char *buff, size_t buff_size, LayoutErrors error)
-{
-  switch (error)
-  {
+void toggle_system_mode(GtkCssProvider *provider, bool dark) {
+    const char *css_path = dark ? CSS_PATH_DARK : CSS_PATH_LIGHT;
+    LOAD_CSS(provider, css_path);
+}
+
+
+
+void error_from_layout_errors(char *buff, size_t buff_size, LayoutErrors error){
+  switch (error) {
   case LAYOUT_INFO_LOCATION_NOT_FOUND:
     snprintf(buff, buff_size, "%s", LAYOUT_INFO_LOCATION_NOT_FOUND_MSG);
     break;
@@ -56,15 +69,12 @@ void error_from_layout_errors(char *buff, size_t buff_size, LayoutErrors error)
     break;
   }
 }
-void error_code_from_layout_errors(char *buff, size_t buff_size, LayoutErrors error)
-{
+void error_code_from_layout_errors(char *buff, size_t buff_size, LayoutErrors error){
   snprintf(buff, buff_size, "PL_EC %d", error);
 }
 
-void image_path_from_layout_errors(char *buff, size_t buff_size, LayoutErrors error)
-{
-  switch (error)
-  {
+void image_path_from_layout_errors(char *buff, size_t buff_size, LayoutErrors error){
+  switch (error){
   case LAYOUT_INFO_LOCATION_NOT_FOUND:
     snprintf(buff, buff_size, "%s", LAYOUT_INFO_LOCATION_NOT_FOUND_IMAGE_PATH);
     break;
@@ -89,8 +99,7 @@ void image_path_from_layout_errors(char *buff, size_t buff_size, LayoutErrors er
   }
 }
 
-GtkWidget *layout_page_error(WeatherUI *ui)
-{
+GtkWidget *layout_page_error(WeatherUI *ui){
 
   char generic_error_code[12];
   error_code_from_layout_errors(generic_error_code, sizeof(generic_error_code), LAYOUT_GENERIC_ERROR);
@@ -113,8 +122,7 @@ GtkWidget *layout_page_error(WeatherUI *ui)
   return page_error;
 }
 
-void show_error_page(WeatherUI *ui, LayoutErrors error)
-{
+void show_error_page(WeatherUI *ui, LayoutErrors error){
   char msg[512];
   char code[12];
   char image_path[512];
@@ -130,7 +138,34 @@ void show_error_page(WeatherUI *ui, LayoutErrors error)
   gtk_stack_set_visible_child_name(GTK_STACK(ui->stack), "page-error");
 }
 
-void show_main_page(WeatherUI *ui)
-{
+void show_main_page(WeatherUI *ui){
   gtk_stack_set_visible_child_name(ui->stack, "page-main");
 }
+
+LayoutTheme get_system_theme(){
+
+    settings = g_settings_new("org.gnome.desktop.interface");
+    bool is_dark = strstr(g_settings_get_string(settings, "color-scheme"), "dark") != NULL;
+    return is_dark ? LAYOUT_DARK_MODE : LAYOUT_LIGHT_MODE;
+}
+
+
+gboolean check_theme_change(gpointer user_data){
+  
+    settings = g_settings_new("org.gnome.desktop.interface");
+    LayoutTheme theme = get_system_theme();
+    if(current_system_theme == LAYOUT_NONE || current_system_theme != theme){
+
+      GtkCssProvider *provider = (GtkCssProvider*)user_data;
+      LOGGER_DEBUG("Changing theme.");
+      toggle_system_mode(provider, theme == LAYOUT_DARK_MODE);
+      current_app_theme = theme;
+      current_system_theme = theme;
+    
+    }
+
+    return G_SOURCE_CONTINUE;
+}
+
+
+

@@ -1,126 +1,106 @@
-
+/* index-dark.css - GTK4 compatible */
 
 headerbar {
-  
   background: none;
   border: none;
-
 }
 
 * {
-  
-
   font-family: "Exo 2", sans-serif;
+  color: #ffffff;
 }
 
 window {
-
-  border-radius: 11px;
+  background: #1e1e1e;
+  border-radius: 10px;
 }
 
 .shimmer {
 
 
   color: #e8e8e8;
-  background: linear-gradient(90deg, #e6e6e6 0%, #e6e6e6 40%, #e8e8e8 70%);
+  background: linear-gradient(90deg, #52545c 0%, #5c5e67 40%, #6b6e78 70%);
   background-size: 200% 100%;
-  background-clip: text;
   color: transparent;
   border-radius: 6px;
   animation: shimmer 1.6s linear infinite;
 }
 
 @keyframes shimmer {
-  0%   { background-position: 200% 0; }
+  0% { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
 
 .main-box {
-  
   padding-left: 75px;
   padding-right: 75px;
-
 }
 
 .app-title {
-
   font-size: 15px;
   font-weight: 500;
+  color: #ffffff;
 }
 
 .city-label {
-
-
   font-size: 24px;
   font-weight: 500;
-
 }
 
 .current-temperature-label {
-
-
   font-size: 46px;
   font-weight: 500;
-
 }
-
 
 .section-label {
-  color: #525151;
   font-weight: 500;
-
+  color: #c9c9c9;
 }
-
 
 .section-box {
-
-
-  background-color: #e8eaf6;
+  background-color: #33363f;
   border-radius: 6px;
   padding: 17px;
-
 }
 
-.tw {
-
-  background-color: #eff1f9;
-  padding-left: 20px;
-  padding-right: 20px;
+.tw,
+.wc {
+  background-color: #2b2b2b;
+  padding: 5px 20px;
   border-radius: 7px;
-  padding-top: 5px;
-  padding-bottom: 5px;
 }
 
 .tw-time-label {
- 
-   color: #525151;
- 
+  color: #c9c9c9;
 }
 
 .tw-temp-label {
- 
   font-weight: bold;
-
-}
-
-.wc {
-
-  background-color: #eff1f9;
-  padding-left: 20px;
-  padding-right: 20px;
-  border-radius: 7px;
-  padding-top: 5px;
-  padding-bottom: 5px;
 }
 
 .current-temperature-image {
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-
 }
 
 .error-code {
   font-size: 12px;
   font-weight: bold;
+  color: #ff6d6d;
 }
+
+.city-entry {
+  color: #fff;
+  background-color: #33363f;
+  border: none;
+}
+
+.toggle-theme {
+  background: none;
+  background-image: none;
+
+  background-color: #33363f;
+  border: none;
+}
+

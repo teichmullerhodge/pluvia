@@ -10,24 +10,28 @@
 #include "widgets/widget_weather_card.h"
 #include <locale.h>
 
-static void on_shutdown(GtkApplication *app, WeatherUI *ui)
-{
+static void on_shutdown(GtkApplication *app, WeatherUI *ui){
   (void)app;
   g_free(ui);
 }
 
-static void on_activate(GtkApplication *app)
-{
+static void on_activate(GtkApplication *app){
 
-  WeatherUI *ui = g_new0(WeatherUI, 1);
+   WeatherUI *ui = g_new0(WeatherUI, 1);
+   GSettings *settings = g_settings_new("org.gnome.desktop.interface");
+   bool is_dark = strstr(g_settings_get_string(settings, "color-scheme"), "dark") != NULL;
+  
+   g_object_unref(settings);
 
-  GtkCssProvider *provider = gtk_css_provider_new();
-  gtk_css_provider_load_from_resource(provider, "/com/pluvia/css/index.css");
-  gtk_style_context_add_provider_for_display(gdk_display_get_default(),
+   GtkCssProvider *provider = gtk_css_provider_new();
+   LOAD_CSS(provider, is_dark ? CSS_PATH_DARK : CSS_PATH_LIGHT);
+   gtk_style_context_add_provider_for_display(gdk_display_get_default(),
                                              GTK_STYLE_PROVIDER(provider),
                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
-  g_object_unref(provider);
+
+
+  g_timeout_add(500, check_theme_change, provider);
 
   GtkWidget *window = gtk_application_window_new(app);
   gtk_window_set_title(GTK_WINDOW(window), APP_CONFIG_WIN_TITLE);
@@ -43,9 +47,10 @@ static void on_activate(GtkApplication *app)
   gtk_widget_add_css_class(app_name_label, "app-title");
   GtkWidget *logo_image = gtk_image_new_from_resource("/com/pluvia/assets/pluvia-icon.png");
   GtkWidget *city_entry = gtk_entry_new();
+  gtk_widget_add_css_class(city_entry, "city-entry");
   gtk_entry_set_placeholder_text(GTK_ENTRY(city_entry), "Search for cities");
   GtkWidget *toggle_theme_btn = touchable(NULL, "night-light-symbolic", NULL);
-
+  gtk_widget_add_css_class(toggle_theme_btn, "toggle-theme");
   gtk_box_append(GTK_BOX(header_box), logo_image);
   gtk_box_append(GTK_BOX(header_box), app_name_label);
   gtk_box_append(GTK_BOX(header_box), city_entry);
@@ -53,7 +58,7 @@ static void on_activate(GtkApplication *app)
   g_signal_connect(city_entry, "activate", G_CALLBACK(on_city_changed), ui);
   gtk_widget_set_hexpand(city_entry, true);
 
-  g_signal_connect(toggle_theme_btn, "clicked", G_CALLBACK(on_toggle_theme_clicked), NULL);
+  g_signal_connect(toggle_theme_btn, "clicked", G_CALLBACK(on_toggle_theme_clicked), provider);
 
   gtk_box_append(GTK_BOX(main_box), header_box);
 
@@ -121,14 +126,14 @@ static void on_activate(GtkApplication *app)
 
   GtkWidget *details_grid = gtk_grid_new();
 
-  GtkWidget *sunrise_card = widget_weather_card("Sunrise", "Sunrise hour", "/com/pluvia/assets/sunrise.png", false);
-  GtkWidget *sunset_card = widget_weather_card("Sunset", "Sunset hour", "/com/pluvia/assets/sunset.png", false);
+  GtkWidget *sunrise_card = widget_weather_card("Sunrise", "Sunrise hour", "daytime-sunrise-symbolic", true);
+  GtkWidget *sunset_card = widget_weather_card("Sunset", "Sunset hour", "daytime-sunset-symbolic", true);
   GtkWidget *chance_of_rain_card = widget_weather_card("Chance of rain", "%", "weather-showers-scattered", true);
   GtkWidget *pressure_card = widget_weather_card("Pressure", "mb", "view-restore-symbolic", true);
   GtkWidget *wind_card = widget_weather_card("Wind", "km/h", "weather-windy-symbolic", true);
   GtkWidget *severe_alert_card = widget_weather_card("Severe alert?", "No", "weather-severe-alert-symbolic", true);
-  GtkWidget *feels_like_card = widget_weather_card("Feels like", "°C", "/com/pluvia/assets/termometer.png", false);
-  GtkWidget *visibility_card = widget_weather_card("Visibility", "km", "/com/pluvia/assets/eye-visible.png", false);
+  GtkWidget *feels_like_card = widget_weather_card("Feels like", "°C", "dialog-question-symbolic", true);
+  GtkWidget *visibility_card = widget_weather_card("Visibility", "km", "weather-fog-symbolic", true);
 
   gtk_grid_attach(GTK_GRID(details_grid), sunrise_card, 0, 0, 1, 1);
   gtk_grid_attach(GTK_GRID(details_grid), sunset_card, 1, 0, 1, 1);
