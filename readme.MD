@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/pluvia-icon.png" alt="Pluvia Icon" width="110">
+  <img src="resources/assets/pluvia-icon.png" alt="Pluvia Icon" width="110">
 </p>
 
 # Pluvia
@@ -33,11 +33,11 @@ Pluvia currently supports:
 ## Screenshots
 
 <p align="center">
-  <img src="assets/pluvia-screen.png" alt="Pluvia screenshot" width="650">
+  <img src="resources/assets/pluvia-screen.png" alt="Pluvia screenshot" width="650">
 </p>
 
 <p align="center">
-  <img src="assets/pluvia-screen-snow.png" alt="Pluvia screenshot snow" width="650">
+  <img src="resources/assets/pluvia-screen-snow.png" alt="Pluvia screenshot snow" width="650">
 </p>
 
 ---
