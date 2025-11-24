@@ -90,3 +90,61 @@ window {
   color: #a83131;
 }
 
+popover {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-top: 5px;
+}
+
+popover list {
+  background: transparent;
+  border-radius: 8px;
+}
+
+popover row {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  transition: all 0.2s ease-in-out;
+}
+
+popover row:hover {
+  background: #f0f4ff;
+}
+
+popover row label {
+  color: #1e1e1e;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+popover row:disabled {
+  background: transparent;
+}
+
+popover row:disabled label {
+  color: #888888;
+  font-style: italic;
+}
+
+popover scrolledwindow scrollbar {
+  background: transparent;
+}
+
+popover scrolledwindow scrollbar slider {
+  background: #c0c0c0;
+  border-radius: 3px;
+  min-width: 6px;
+}
+
+popover scrolledwindow scrollbar slider:hover {
+  background: #a0a0a0;
+}
+
+.suggestions-list {
+  background-color: #ff6c00;
+}

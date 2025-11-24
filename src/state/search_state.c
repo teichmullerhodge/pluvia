@@ -5,6 +5,11 @@
 #include "../weather_info/weather_assets.h"
 #include "../layout/layout.h"
 #include "../nett/nett_utils.h"
+#include "../geo_store/geo_store.h"
+#include "../logger/logger.h"
+
+static CityGeoData cities_store[CITIES_STORE_MAX_ELEMENTS];
+GCancellable *current_city_cancellable = NULL;
 
 
 void set_loading_ui(WeatherUI *ui, bool loading) {
@@ -61,26 +66,18 @@ void debounce_search_task(GTask *task, gpointer source_object, gpointer task_dat
     WeatherUI *ui = task_data;
 
     const char *city = gtk_editable_get_text(GTK_EDITABLE(ui->search_entry));
-
+    get_cities_from_query(city, cities_store, current_city_cancellable);
     NettResponse *res = response_init();
-    GeoCoordinates geo = get_city_latitude_longitude(city, res);
-
-    if(!nett_ok(res->status_code)){
-      destroy_response(res);
-      g_task_return_pointer(task, NULL, NULL);
-      show_error_page(ui, LAYOUT_REQUEST_ERROR);
-      return;
-    }
-
-    if (geo.latitude == 0.0f || geo.longitude == 0.0f) {
-        destroy_response(res);
+    CityGeoData first = cities_store[0];
+    
+    if (first.latitude == 0.0f || first.longitude == 0.0f) {
         g_task_return_pointer(task, NULL, NULL);
         show_error_page(ui, LAYOUT_LOCATION_DONT_EXIST); 
         return;
     }
-
+    
     WeatherInfo *info = g_new0(WeatherInfo, 1);
-    *info = get_city_weather(geo, res);
+    *info = get_city_weather(first, res);
 
     if(!nett_ok(res->status_code)){
       destroy_response(res);
@@ -187,8 +184,66 @@ void on_city_changed(GtkEntry *e, gpointer data) {
     if(!has_internet()){
       show_error_page(ui, LAYOUT_NO_INTERNET);
       return;
-    }
+    
+  }
     debounce_search(ui);
 }
 
+
+
+
+static void run_cities_query_in_parallel(GTask *task, gpointer source_object, gpointer task_data, GCancellable *cancellable) {
+    (void)source_object;
+    (void)task_data;
+    (void)cancellable;
+    const char *query = task_data;
+    
+    if (g_cancellable_is_cancelled(cancellable)) {
+        LOGGER_WARNING("Task cancel OK.");
+        g_task_return_boolean(task, FALSE);
+        return;
+    }
+
+    get_cities_from_query(query, cities_store, current_city_cancellable);
+    
+    if (g_cancellable_is_cancelled(cancellable)) {
+        LOGGER_WARNING("Task cancel OK.");
+        g_task_return_boolean(task, FALSE);
+        return;
+    }
+
+    g_task_return_boolean(task, TRUE);
+}
+
+
+void run_cities_query_async(const char *query){
+
+
+    if (current_city_cancellable != NULL)
+        g_cancellable_cancel(current_city_cancellable);
+
+    current_city_cancellable = g_cancellable_new();
+    GTask *task = g_task_new(NULL, current_city_cancellable, NULL, NULL);
+    g_task_set_task_data(task,
+                         g_strdup(query),
+                         g_free);
+    g_task_run_in_thread(task, run_cities_query_in_parallel);
+    g_object_unref(task);
+}
+
+void on_city_entry_changed(GtkEditable *editable, gpointer data) {
+    WeatherUI *ui = data;
+    (void)ui; 
+ 
+    LOGGER_DEBUG("Entering in cities query."); 
+    const char *city_text = gtk_editable_get_text(editable);
+    
+    if(strlen(city_text) <= 2) {
+        gtk_popover_popdown(GTK_POPOVER(ui->popover));
+        return;
+    }
+      
+    run_cities_query_async(city_text);
+    return;
+}
 

@@ -31,7 +31,7 @@ static void on_activate(GtkApplication *app){
 
 
 
-  g_timeout_add(500, check_theme_change, provider);
+  g_timeout_add(1000, check_theme_change, provider);
 
   GtkWidget *window = gtk_application_window_new(app);
   gtk_window_set_title(GTK_WINDOW(window), APP_CONFIG_WIN_TITLE);
@@ -58,9 +58,30 @@ static void on_activate(GtkApplication *app){
   g_signal_connect(city_entry, "activate", G_CALLBACK(on_city_changed), ui);
   gtk_widget_set_hexpand(city_entry, true);
 
+
   g_signal_connect(toggle_theme_btn, "clicked", G_CALLBACK(on_toggle_theme_clicked), provider);
 
   gtk_box_append(GTK_BOX(main_box), header_box);
+
+  GtkWidget *suggestions_popover = gtk_popover_new();
+  gtk_widget_add_css_class(suggestions_popover, "suggestions-popover");
+  
+
+  gtk_popover_set_has_arrow(GTK_POPOVER(suggestions_popover), false);
+  gtk_popover_set_position(GTK_POPOVER(suggestions_popover), GTK_POS_BOTTOM);
+  gtk_widget_set_parent(suggestions_popover, city_entry);
+
+  GtkWidget *list_box = gtk_list_box_new();
+  gtk_widget_add_css_class(list_box, "suggestions-list");
+
+  gtk_list_box_set_selection_mode(GTK_LIST_BOX(list_box), GTK_SELECTION_NONE);
+  gtk_popover_set_child(GTK_POPOVER(suggestions_popover), list_box);
+
+  g_signal_connect(city_entry, "changed", G_CALLBACK(on_city_entry_changed), ui);
+
+
+  ui->popover = suggestions_popover;
+  ui->pop_over_list_box = list_box;
 
   GtkWidget *page_main = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 

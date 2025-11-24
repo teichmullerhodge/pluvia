@@ -3,7 +3,7 @@ set -e
 
 COMPILER=gcc
 CXXFLAGS="-Wall -Wextra -Werror -O3 $(pkg-config --cflags gtk4)"
-LDFLAGS="$(pkg-config --libs gtk4) -lm -lcurl -lcjson"
+LDFLAGS="$(pkg-config --libs gtk4) -lm -lcurl -lcjson -lsqlite3"
 
 SRC_DIR=src
 BUILD_DIR=build

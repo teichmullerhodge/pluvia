@@ -7,7 +7,7 @@
 #define APP_CONFIG_WIN_WIDTH 800
 #define APP_CONFIG_WIN_HEIGHT 600
 
-#define APP_CONFIG_DEBUG_MODE 0
+#define APP_CONFIG_DEBUG_MODE 1
 
 #if APP_CONFIG_DEBUG_MODE
     #define LOAD_CSS(provider, path) gtk_css_provider_load_from_path(provider, path)

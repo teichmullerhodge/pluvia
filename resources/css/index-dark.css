@@ -104,3 +104,49 @@ window {
   border: none;
 }
 
+.suggestions-list {
+  background-color: #33363f;
+}
+
+.suggestions-popover {
+  background-color: #33363f;
+
+}
+
+popover.background > arrow-background {
+  background: transparent;
+}
+
+popover.background > contents {
+  background: transparent;
+  border-radius: 8px;
+  padding: 4px;
+  border: none;
+
+}
+
+list {
+  background: transparent;
+  border: none;
+
+
+}
+
+list > row {
+  background: transparent;
+  border-radius: 4px;
+  margin: 2px 0;
+}
+
+list > row:hover {
+ 
+
+  background: #2e3138;
+
+}
+
+list > row label {
+  color: #fff;
+  font-size: 14px;
+  padding: 8px 12px;
+}

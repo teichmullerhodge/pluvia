@@ -43,7 +43,6 @@ void toggle_system_mode(GtkCssProvider *provider, bool dark) {
 }
 
 
-
 void error_from_layout_errors(char *buff, size_t buff_size, LayoutErrors error){
   switch (error) {
   case LAYOUT_INFO_LOCATION_NOT_FOUND:
@@ -143,16 +142,17 @@ void show_main_page(WeatherUI *ui){
 }
 
 LayoutTheme get_system_theme(){
-
-    settings = g_settings_new("org.gnome.desktop.interface");
+    
+    if(settings == NULL){
+      settings = g_settings_new("org.gnome.desktop.interface");
+    }
     bool is_dark = strstr(g_settings_get_string(settings, "color-scheme"), "dark") != NULL;
     return is_dark ? LAYOUT_DARK_MODE : LAYOUT_LIGHT_MODE;
 }
 
 
 gboolean check_theme_change(gpointer user_data){
-  
-    settings = g_settings_new("org.gnome.desktop.interface");
+ 
     LayoutTheme theme = get_system_theme();
     if(current_system_theme == LAYOUT_NONE || current_system_theme != theme){
 

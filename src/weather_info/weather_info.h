@@ -2,7 +2,7 @@
 #define WEATHER_INFO_H 
 
 #include "../definitions/definitions.h"
-#include "../geo_coord/geo_coord.h"
+#include "../geo_store/geo_store.h"
 #include "../nett/nett.h"
 #include <gtk/gtk.h>
 
@@ -91,6 +91,9 @@ typedef struct {
     GtkImage *error_image; 
     GtkLabel *error_code;
 
+    GtkWidget *popover;
+    GtkWidget *pop_over_list_box;
+
 } WeatherUI;
 
 
@@ -119,7 +122,7 @@ typedef struct {
    
 } WeatherInfo;
 
-WeatherInfo get_city_weather(GeoCoordinates coord, NettResponse *res);
+WeatherInfo get_city_weather(CityGeoData coord, NettResponse *res);
 
 
 

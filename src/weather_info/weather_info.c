@@ -16,13 +16,12 @@ int current_hour() {
     return current_hour;
 }
 
-WeatherInfo get_city_weather(GeoCoordinates coord, NettResponse *res){
+WeatherInfo get_city_weather(CityGeoData coord, NettResponse *res){
 
 
   WeatherInfo info = {0};
   char weather_location_url[1024];
   build_weather_location_query_uri(coord.latitude, coord.longitude, weather_location_url, sizeof(weather_location_url));
-  g_print("Current url: %s\n", weather_location_url);
   nett_get(weather_location_url, NULL, res);
   if(!nett_ok(res->status_code) || res->contents == NULL) return info;
   cJSON *json = cJSON_Parse(res->contents);
